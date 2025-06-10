@@ -1,12 +1,17 @@
+import 'package:dictionary/core/presentation/screens/auth/login/login.dart';
+import 'package:dictionary/core/presentation/screens/auth/register/reegister.dart';
 import 'package:dictionary/core/routes/named_routes.dart';
-import 'package:dictionary/views/splash_screen.dart';
+import 'package:dictionary/core/presentation/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 class RouteHandler {
   static final routes = {
     NamedRoute.splash: (_) => const SplashScreen(),
-    //NamedRoute.home: (_) => const HomePage(),
+    NamedRoute.login: (_) => const LoginPage(),
+    NamedRoute.register: (_) => const RegisterPage(),
+
     /*
+    //NamedRoute.home: (_) => const HomePage(),
     NamedRoute.homePageOne: (_) => const HomePageOne(),
     NamedRoute.pageOne: (_) => const PageOne(),
     NamedRoute.homePageTwo: (_) => const HomePageTwo(),

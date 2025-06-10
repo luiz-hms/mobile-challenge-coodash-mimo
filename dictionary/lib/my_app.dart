@@ -1,6 +1,6 @@
 import 'package:dictionary/core/routes/named_routes.dart';
 import 'package:dictionary/core/routes/route.dart';
-import 'package:dictionary/views/splash_screen.dart';
+import 'package:dictionary/core/presentation/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const SplashScreen(),
       routes: RouteHandler.routes,
-      initialRoute: NamedRoute.splash,
+      initialRoute: NamedRoute.login,
     );
   }
 }
