@@ -2,6 +2,7 @@ import 'package:dictionary/core/presentation/screens/splash_screen.dart';
 import 'package:dictionary/core/presentation/widgets/custom_fields/fields_decoration.dart';
 import 'package:dictionary/core/routes/named_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -29,10 +30,10 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   Column(
                     children: [
-                      Icon(
-                        Icons.translate,
-                        size: 100,
-                        color: Color(0xff151419),
+                      Lottie.asset(
+                        'assets/translate_lottie.json',
+                        width: 150,
+                        height: 150,
                       ),
                       Text(
                         "dictionary".toUpperCase(),

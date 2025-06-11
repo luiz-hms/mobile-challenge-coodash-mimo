@@ -11,7 +11,17 @@ class SplashScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 8,
-          children: [Lottie.asset('assets/splash.json'), Text("DICTIONARY")],
+          children: [
+            Lottie.asset(
+              'assets/translate_lottie.json',
+              width: 150,
+              height: 150,
+            ),
+            Text(
+              "dictionary".toUpperCase(),
+              style: TextStyle(color: Color(0xfff56e0f)),
+            ),
+          ],
         ),
       ),
     );
