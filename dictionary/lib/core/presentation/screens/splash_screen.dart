@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -12,11 +11,13 @@ class SplashScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 8,
           children: [
+            /*
             Lottie.asset(
               'assets/translate_lottie.json',
               width: 150,
               height: 150,
             ),
+            */
             Text(
               "dictionary".toUpperCase(),
               style: TextStyle(color: Color(0xfff56e0f)),
