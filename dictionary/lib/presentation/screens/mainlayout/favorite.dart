@@ -18,7 +18,18 @@ class _FavoriteState extends State<Favorite> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('lista de favoritos')),
+      appBar: AppBar(
+        title: const Text(
+          'lista de favoritos',
+          style: TextStyle(
+            color: Color(0xff151419),
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Color(0xfffbfbfb),
+        elevation: 1,
+      ),
       body: FutureBuilder<List<WordModels>>(
         future: repository.getPalavrasByFavorito(),
         builder: (context, snapshot) {
@@ -31,21 +42,27 @@ class _FavoriteState extends State<Favorite> {
           }
 
           final listwords = snapshot.data!;
-          return GridView.builder(
-            itemCount: listwords.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              mainAxisExtent: 100,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 15,
-              crossAxisCount: 2,
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 40),
+            child: GridView.builder(
+              itemCount: listwords.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                mainAxisExtent: 100,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 15,
+                crossAxisCount: 2,
+              ),
+              itemBuilder: (context, index) {
+                final words = listwords[index];
+                return CustomCard(
+                  word: words.word,
+                  trailing: FavoriteButton(
+                    word: words.word,
+                    isFavorite: words.favorite,
+                  ),
+                );
+              },
             ),
-            itemBuilder: (context, index) {
-              final words = listwords[index];
-              return CustomCard(
-                word: words.word,
-                trailing: FavoriteButton(isFavorite: words.favorite),
-              );
-            },
           );
         },
       ),

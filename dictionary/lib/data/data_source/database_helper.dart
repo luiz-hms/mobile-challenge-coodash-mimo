@@ -48,13 +48,13 @@ class DatabaseHelper {
     });
   }
 
-  Future<int> update(String row, bool status) async {
+  Future<int> update(String word, bool status) async {
     final db = await database;
     return await db.update(
       tableName,
-      {row: status ? 1 : 0},
-      where: '$columnWord = ?',
-      whereArgs: [columnWord],
+      {'favorite': status ? 1 : 0}, // nome real da coluna
+      where: '$columnWord = ?', // ex: palavra = ?
+      whereArgs: [word], // valor real da palavra
     );
   }
 

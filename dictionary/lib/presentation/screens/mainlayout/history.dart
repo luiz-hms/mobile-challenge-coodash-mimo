@@ -58,7 +58,10 @@ class _HistoryState extends State<History> {
 
                 return CustomCard(
                   word: words.word,
-                  trailing: FavoriteButton(isFavorite: words.favorite),
+                  trailing: FavoriteButton(
+                    word: words.word,
+                    isFavorite: words.favorite,
+                  ),
                 );
               },
             ),

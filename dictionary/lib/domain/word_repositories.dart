@@ -11,11 +11,19 @@ class WordRepository {
   }
 
   // Atualizar status de favorito
-  Future<int> updatePalavra(String row, bool status) async {
-    int linhasAfetadas = await _dbHelper.update(row, status);
+  Future<int> updatePalavra(String palavra, bool status) async {
+    int linhasAfetadas = await _dbHelper.update(palavra, status);
+    print("Linhas afetadas: $linhasAfetadas");
     return linhasAfetadas;
   }
 
+  /*
+  Future<int> updatePalavra(String row, bool status) async {
+    int linhasAfetadas = await _dbHelper.update(row, status);
+    print(linhasAfetadas.toString());
+    return linhasAfetadas;
+  }
+*/
   // Buscar todas as palavras salvas no banco
   Future<List<WordModels>> getPalavrasByHistorico() async {
     final result = await _dbHelper.queryByColumn('history', 1);
