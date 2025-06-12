@@ -1,6 +1,6 @@
 import 'package:dictionary/core/routes/named_routes.dart';
 import 'package:dictionary/core/routes/route.dart';
-import 'package:dictionary/core/presentation/screens/splash_screen.dart';
+import 'package:dictionary/presentation/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
