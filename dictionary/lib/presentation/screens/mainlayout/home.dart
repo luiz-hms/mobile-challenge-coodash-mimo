@@ -1,11 +1,5 @@
 import 'dart:convert';
-
-import 'package:dictionary/core/injector.dart';
-import 'package:dictionary/data/models/word_models.dart';
-import 'package:dictionary/domain/word_repositories.dart';
-import 'package:dictionary/presentation/screens/word_detail/word_detail.dart';
 import 'package:dictionary/presentation/widgets/card/card.dart';
-import 'package:dictionary/presentation/widgets/favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -17,42 +11,94 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  // final WordRepository _repository = WordRepository();
-  List<String> palavras = []; // Lista de palavras extraídas do arquivo JSON
-  List<WordModels> palavrasSalvas = [];
+  final ScrollController _scrollController = ScrollController();
+
+  List<String> _allWords = []; // Lista completa do JSON
+  List<String> _visibleWords = []; // Lista paginada para exibição
+  int _currentPage = 0;
+  final int _itemsPerPage = 50;
+  bool _isLoadingMore = false;
 
   @override
   void initState() {
     super.initState();
-    _loadPalavrasFromJson(); // Carregar palavras do arquivo JSON
+    _loadPalavrasFromJson();
+    _scrollController.addListener(_onScroll);
   }
 
-  // Função para carregar palavras do arquivo JSON local
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 200 &&
+        !_isLoadingMore) {
+      _loadNextPage();
+    }
+  }
+
+  // Carrega o JSON e inicia a primeira página
   Future<void> _loadPalavrasFromJson() async {
-    // Carregar o arquivo JSON do assets com a lista de palavras
     final String response = await rootBundle.loadString(
       'assets/words_dictionary.json',
     );
-    final data = json.decode(response); // Decodificar o JSON
-    setState(() {
-      palavras = List<String>.from(data['wordsJson']);
+    final data = json.decode(response);
+
+    _allWords = List<String>.from(data['wordsJson']);
+    _loadNextPage(); // carrega a primeira página
+  }
+
+  // Carrega a próxima página de dados
+  void _loadNextPage() {
+    if (_isLoadingMore) return;
+    _isLoadingMore = true;
+
+    Future.delayed(const Duration(milliseconds: 300), () {
+      final start = _currentPage * _itemsPerPage;
+      final end = start + _itemsPerPage;
+      final nextItems = _allWords.sublist(
+        start,
+        end > _allWords.length ? _allWords.length : end,
+      );
+
+      setState(() {
+        _visibleWords.addAll(nextItems);
+        _currentPage++;
+      });
+
+      _isLoadingMore = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
+      appBar: AppBar(
+        title: const Text(
+          'lista de históricos',
+          style: TextStyle(
+            color: Color(0xff151419),
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Color(0xfffbfbfb),
+        elevation: 1,
+      ),
       body:
-          palavras.isEmpty
-              ? const Center(
-                child: CircularProgressIndicator(),
-              ) // Exibe um carregamento enquanto carrega o JSON
+          _allWords.isEmpty
+              ? const Center(child: CircularProgressIndicator())
               : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-
+                padding: const EdgeInsets.symmetric(
+                  vertical: 40,
+                  horizontal: 10,
+                ),
                 child: GridView.builder(
-                  itemCount: palavras.length,
+                  controller: _scrollController,
+                  itemCount: _visibleWords.length + 1,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     mainAxisExtent: 100,
                     crossAxisSpacing: 10,
@@ -60,8 +106,12 @@ class _HomeState extends State<Home> {
                     crossAxisCount: 2,
                   ),
                   itemBuilder: (context, index) {
-                    String palavra = palavras[index];
-                    return CustomCard(word: palavra);
+                    if (index < _visibleWords.length) {
+                      final palavra = _visibleWords[index];
+                      return CustomCard(word: palavra);
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
                   },
                 ),
               ),
