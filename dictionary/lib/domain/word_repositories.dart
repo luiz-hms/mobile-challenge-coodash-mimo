@@ -13,7 +13,6 @@ class WordRepository {
   // Atualizar status de favorito
   Future<int> updatePalavra(String palavra, bool status) async {
     int linhasAfetadas = await _dbHelper.update(palavra, status);
-    print("Linhas afetadas: $linhasAfetadas");
     return linhasAfetadas;
   }
 

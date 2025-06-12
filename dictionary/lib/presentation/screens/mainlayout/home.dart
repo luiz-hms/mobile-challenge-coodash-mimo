@@ -78,7 +78,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'lista de históricos',
+          'lista de palavras',
           style: TextStyle(
             color: Color(0xff151419),
             fontWeight: FontWeight.w700,

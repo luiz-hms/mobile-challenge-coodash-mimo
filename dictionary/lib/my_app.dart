@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const SplashScreen(),
       routes: RouteHandler.routes,
-      initialRoute: NamedRoute.login,
+      initialRoute: NamedRoute.splash,
     );
   }
 }
