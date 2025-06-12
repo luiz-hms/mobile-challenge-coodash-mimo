@@ -1,6 +1,8 @@
+import 'package:dictionary/core/injector.dart';
 import 'package:dictionary/data/models/word_models.dart';
 import 'package:dictionary/domain/word_repositories.dart';
-import 'package:dictionary/presentation/screens/word_detail/word_detail.dart';
+import 'package:dictionary/presentation/widgets/card/card.dart';
+import 'package:dictionary/presentation/widgets/favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 
 class History extends StatefulWidget {
@@ -11,13 +13,26 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
-  final WordRepository _palavraRepository = WordRepository();
+  var repository = locator.get<WordRepository>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('lista de históricos')),
+      backgroundColor: Color(0xfffbfbfb),
+      appBar: AppBar(
+        title: const Text(
+          'lista de históricos',
+          style: TextStyle(
+            color: Color(0xff151419),
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Color(0xfffbfbfb),
+        elevation: 1,
+      ),
       body: FutureBuilder<List<WordModels>>(
-        future: _palavraRepository.getPalavrasByHistorico(),
+        future: repository.getPalavrasByHistorico(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -27,48 +42,26 @@ class _HistoryState extends State<History> {
             return const Center(child: Text("Nenhuma palavra no histórico"));
           }
 
-          final palavras = snapshot.data!;
-          return GridView.builder(
-            itemCount: palavras.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-            ),
-            itemBuilder: (context, index) {
-              //final palavra = palavras[index];
-              //bool isSalva = _isPalavraSalva(palavra);
+          final listwords = snapshot.data!;
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 10),
+            child: GridView.builder(
+              itemCount: listwords.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                mainAxisExtent: 100,
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 15,
+                crossAxisCount: 2,
+              ),
+              itemBuilder: (context, index) {
+                final words = listwords[index];
 
-              return Card(
-                child: ListTile(
-                  title: Text(palavras[index].word),
-                  trailing: IconButton(
-                    icon: Icon(
-                      palavras[index].favorite
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      color: Colors.redAccent,
-                    ),
-                    onPressed:
-                        () => {
-                          {
-                            _palavraRepository.updatePalavra(
-                              'favorite',
-                              !palavras[index].favorite,
-                            ),
-                          },
-                        },
-                  ),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder:
-                            //((context) => WordDetail(palavras[index].word)),
-                            ((context) => WordDetail()),
-                      ),
-                    );
-                  },
-                ),
-              );
-            },
+                return CustomCard(
+                  word: words.word,
+                  trailing: FavoriteButton(isFavorite: words.favorite),
+                );
+              },
+            ),
           );
         },
       ),

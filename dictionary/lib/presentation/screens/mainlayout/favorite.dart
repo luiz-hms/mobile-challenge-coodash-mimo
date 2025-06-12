@@ -1,6 +1,9 @@
+import 'package:dictionary/core/injector.dart';
 import 'package:dictionary/data/models/word_models.dart';
 import 'package:dictionary/domain/word_repositories.dart';
 import 'package:dictionary/presentation/screens/word_detail/word_detail.dart';
+import 'package:dictionary/presentation/widgets/card/card.dart';
+import 'package:dictionary/presentation/widgets/favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 
 class Favorite extends StatefulWidget {
@@ -11,14 +14,13 @@ class Favorite extends StatefulWidget {
 }
 
 class _FavoriteState extends State<Favorite> {
-  final WordRepository _wordRepository = WordRepository();
-
+  var repository = locator.get<WordRepository>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('lista de favoritos')),
       body: FutureBuilder<List<WordModels>>(
-        future: _wordRepository.getPalavrasByFavorito(),
+        future: repository.getPalavrasByFavorito(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -28,41 +30,20 @@ class _FavoriteState extends State<Favorite> {
             return const Center(child: Text("Nenhuma palavra nos Favoritos"));
           }
 
-          final palavras = snapshot.data!;
+          final listwords = snapshot.data!;
           return GridView.builder(
-            itemCount: palavras.length,
+            itemCount: listwords.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              mainAxisExtent: 100,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 15,
               crossAxisCount: 2,
             ),
             itemBuilder: (context, index) {
-              String palavra = palavras[index].word;
-              return Card(
-                child: ListTile(
-                  title: Text(palavras[index].word),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.favorite, color: Colors.redAccent),
-                    onPressed:
-                        () => {
-                          {
-                            _wordRepository.updatePalavra(
-                              'favorite',
-                              !palavras[index].favorite,
-                            ),
-                          },
-                        },
-                  ),
-                  onTap: () async {
-                    int id = await _wordRepository.addPalavra(palavra);
-                    if (id != 0) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          //builder: ((context) => WordDetail(palavra)),
-                          builder: ((context) => WordDetail()),
-                        ),
-                      );
-                    }
-                  },
-                ),
+              final words = listwords[index];
+              return CustomCard(
+                word: words.word,
+                trailing: FavoriteButton(isFavorite: words.favorite),
               );
             },
           );

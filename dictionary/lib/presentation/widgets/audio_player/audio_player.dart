@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
 class CustomAudio extends StatefulWidget {
-  //final String url;
-  const CustomAudio({super.key});
+  final String urlAudio;
+  const CustomAudio({super.key, required this.urlAudio});
 
   @override
   State<CustomAudio> createState() => _CustomAudioState();
@@ -12,8 +12,6 @@ class CustomAudio extends StatefulWidget {
 class _CustomAudioState extends State<CustomAudio> {
   final player = AudioPlayer();
 
-  String urlAudio =
-      'https://api.dictionaryapi.dev/media/pronunciations/en/love-uk.mp3';
   String formatDuration(Duration duration) {
     final minutos = duration.inMinutes.remainder(60);
     final segundos = duration.inSeconds.remainder(60);
@@ -38,7 +36,7 @@ class _CustomAudioState extends State<CustomAudio> {
   void initState() {
     super.initState();
     player.setUrl(
-      urlAudio,
+      widget.urlAudio,
       //'https://api.dictionaryapi.dev/media/pronunciations/en/hello-uk.mp3'
     );
     player.positionStream.listen((p) {

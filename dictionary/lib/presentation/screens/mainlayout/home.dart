@@ -1,8 +1,11 @@
 import 'dart:convert';
 
+import 'package:dictionary/core/injector.dart';
 import 'package:dictionary/data/models/word_models.dart';
 import 'package:dictionary/domain/word_repositories.dart';
 import 'package:dictionary/presentation/screens/word_detail/word_detail.dart';
+import 'package:dictionary/presentation/widgets/card/card.dart';
+import 'package:dictionary/presentation/widgets/favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,7 +17,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final WordRepository _repository = WordRepository();
+  // final WordRepository _repository = WordRepository();
   List<String> palavras = []; // Lista de palavras extraídas do arquivo JSON
   List<WordModels> palavrasSalvas = [];
 
@@ -46,40 +49,19 @@ class _HomeState extends State<Home> {
                 child: CircularProgressIndicator(),
               ) // Exibe um carregamento enquanto carrega o JSON
               : Padding(
-                padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+
                 child: GridView.builder(
                   itemCount: palavras.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    mainAxisExtent: 100,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 15,
                     crossAxisCount: 2,
                   ),
                   itemBuilder: (context, index) {
                     String palavra = palavras[index];
-
-                    return Card(
-                      child: ListTile(
-                        title: Text(palavra),
-                        trailing: IconButton(
-                          icon: const Icon(
-                            Icons.favorite_border,
-                            color: Colors.redAccent,
-                          ),
-                          onPressed:
-                              () => {
-                                _repository.updatePalavra('favorite', true),
-                              },
-                        ),
-                        onTap: () async {
-                          int id = await _repository.addPalavra(palavra);
-                          if (id != 0) {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: ((context) => WordDetail()),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    );
+                    return CustomCard(word: palavra);
                   },
                 ),
               ),

@@ -1,13 +1,14 @@
 import 'package:dictionary/data/models/api_dictionary_models.dart';
 import 'package:dictionary/presentation/widgets/audio_player/audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../../../services/api.dart';
 
 class WordDetail extends StatefulWidget {
   //final String palavra;
-  WordDetail({super.key});
+  //WordDetail({super.key});
   //WordDetail(this.palavra, {super.key});
-  //const WordDetail({Key? key, required this.palavra}) : super(key: key);
+  const WordDetail({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -17,24 +18,28 @@ class WordDetail extends StatefulWidget {
 class _WordDetailState extends State<WordDetail> {
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as String;
+    print(args);
     return Scaffold(
       appBar: AppBar(title: const Text('')),
       body: FutureBuilder<List<ApiDictionaryModels>>(
-        future: ApiService().fetchWordDetails('love'),
+        future: ApiService().fetchWordDetails(args.toString()),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return const Center(child: Text('Error loading details'));
+            return Center(
+              child: Column(
+                children: [
+                  Lottie.asset('assets/404.json', height: 400, width: 300),
+                  Text('Palavra não encontrada'),
+                ],
+              ),
+            );
           }
           final data = snapshot.data!;
           final wordDetails = data.first;
-          /*
-          setState(() {
-            urlAudio = wordDetails.phonetics.first.audio.toString();
-          });
-          */
           return Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -69,29 +74,12 @@ class _WordDetailState extends State<WordDetail> {
                     ),
                   ),
                 ),
-                CustomAudio(),
-                /*
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(formatDuration(position)),
-                    Slider(
-                      min: 0.0,
-                      max: duration.inSeconds.toDouble(),
-                      value: position.inSeconds.toDouble(),
-                      onChanged: handleSeek,
-                    ),
-                    Text(formatDuration(duration)),
-                    IconButton(
-                      onPressed: handlePause,
-                      icon: Icon(
-                        player.playing ? Icons.pause : Icons.play_arrow,
-                      ),
-                    ),
-                  ],
-                ),*/
+                CustomAudio(
+                  urlAudio:
+                      wordDetails.phonetics
+                          .firstWhere((p) => p.audio!.isNotEmpty)
+                          .toString(),
+                ),
                 const SizedBox(height: 50),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
