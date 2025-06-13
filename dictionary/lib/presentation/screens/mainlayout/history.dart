@@ -1,4 +1,5 @@
 import 'package:dictionary/core/injector.dart';
+import 'package:dictionary/data/data_source/database_helper.dart';
 import 'package:dictionary/data/models/word_models.dart';
 import 'package:dictionary/domain/word_repositories.dart';
 import 'package:dictionary/presentation/widgets/card/card.dart';
@@ -35,7 +36,9 @@ class _HistoryState extends State<History> {
         future: repository.getPalavrasByHistorico(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(color: Color(0xfff56E0f)),
+            );
           } else if (snapshot.hasError) {
             return const Center(child: Text("Erro ao carregar histórico"));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -67,6 +70,20 @@ class _HistoryState extends State<History> {
             ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        elevation: 1,
+        backgroundColor: const Color(0xff151419),
+        tooltip: 'Increment',
+        onPressed: () {
+          repository.cleanList(DatabaseHelper.columnHistory);
+          setState(() {});
+        },
+        child: const Icon(
+          Icons.delete_outline,
+          color: Color(0xfff56E0f),
+          size: 28,
+        ),
       ),
     );
   }

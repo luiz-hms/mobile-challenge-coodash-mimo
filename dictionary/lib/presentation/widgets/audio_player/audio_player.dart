@@ -62,24 +62,32 @@ class _CustomAudioState extends State<CustomAudio> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Text(formatDuration(position)),
-        Slider(
-          min: 0.0,
-          max: duration.inSeconds.toDouble(),
-          value: position.inSeconds.toDouble(),
-          onChanged: handleSeek,
-        ),
-        Text(formatDuration(duration)),
-        IconButton(
-          onPressed: handlePause,
-          icon: Icon(player.playing ? Icons.pause : Icons.play_arrow),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18),
+      child: Column(
+        spacing: 5,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Text(formatDuration(position)),
+          Slider(
+            thumbColor: Color(0xfff56E0f),
+            min: 0.0,
+            max: duration.inSeconds.toDouble(),
+            value: position.inSeconds.toDouble(),
+            onChanged: handleSeek,
+          ),
+          Text(formatDuration(duration)),
+          IconButton(
+            onPressed: handlePause,
+            icon: Icon(
+              player.playing ? Icons.pause : Icons.play_arrow,
+              color: Color(0xfff56E0f),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

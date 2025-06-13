@@ -110,7 +110,11 @@ class _HomeState extends State<Home> {
                       final palavra = _visibleWords[index];
                       return CustomCard(word: palavra);
                     } else {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: Color(0xfff56E0f),
+                        ),
+                      );
                     }
                   },
                 ),

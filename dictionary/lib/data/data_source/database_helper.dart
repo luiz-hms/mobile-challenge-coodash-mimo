@@ -48,13 +48,22 @@ class DatabaseHelper {
     });
   }
 
+  Future<void> cleanList(String columnName) async {
+    try {
+      final db = await database;
+      await db.update(tableName, {'favorite': 0});
+    } catch (e) {
+      throw Exception('Erro ao limpar a lista');
+    }
+  }
+
   Future<int> update(String word, bool status) async {
     final db = await database;
     return await db.update(
       tableName,
-      {'favorite': status ? 1 : 0}, // nome real da coluna
-      where: '$columnWord = ?', // ex: palavra = ?
-      whereArgs: [word], // valor real da palavra
+      {'favorite': status ? 1 : 0},
+      where: '$columnWord = ?',
+      whereArgs: [word],
     );
   }
 

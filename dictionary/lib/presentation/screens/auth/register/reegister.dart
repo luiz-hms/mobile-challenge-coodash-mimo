@@ -10,7 +10,9 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final ValueNotifier<bool> obscurePassword = ValueNotifier(true);
+  TextEditingController emailTextController = TextEditingController();
+  TextEditingController passwordTextController = TextEditingController();
+  TextEditingController passwordConfirmTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,41 +28,37 @@ class _RegisterPageState extends State<RegisterPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Text("cadastre-se"),
-                  //Image.asset('assets/images/LOGO-GUARDIAO.png'),
+                  Text(
+                    "cadastre-se".toUpperCase(),
+                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 30),
+                  ),
                   Column(
                     spacing: 30,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       TextFormField(
+                        controller: emailTextController,
                         decoration: FieldsDecoration('email', Icon(Icons.mail)),
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.emailAddress,
                       ),
-                      ValueListenableBuilder<bool>(
-                        valueListenable: obscurePassword,
-                        builder: (context, obscurePassword, child) {
-                          return TextFormField(
-                            decoration: FieldsDecoration(
-                              'senha',
-                              Icon(Icons.security),
-                              IconButton(
-                                onPressed: () {
-                                  this.obscurePassword.value =
-                                      !this.obscurePassword.value;
-                                },
-                                icon: Icon(
-                                  obscurePassword
-                                      ? Icons.visibility_off
-                                      : Icons.visibility,
-                                ),
-                              ),
-                            ),
-                            //keyboardType: TextInputType.visiblePassword,
-                            textInputAction: TextInputAction.done,
-                            obscureText: obscurePassword,
-                          );
-                        },
+                      TextFormField(
+                        controller: passwordTextController,
+                        decoration: FieldsDecoration(
+                          'senha',
+                          Icon(Icons.visibility),
+                        ),
+                        //keyboardType: TextInputType.visiblePassword,
+                        textInputAction: TextInputAction.done,
+                      ),
+                      TextFormField(
+                        controller: passwordConfirmTextController,
+                        decoration: FieldsDecoration(
+                          'senha',
+                          Icon(Icons.visibility),
+                        ),
+                        //keyboardType: TextInputType.visiblePassword,
+                        textInputAction: TextInputAction.done,
                       ),
                       ElevatedButton(
                         style: ButtonStyle(
@@ -86,7 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           );
                         },
                         child: Text(
-                          'entrar'.toUpperCase(),
+                          'cadastrar'.toUpperCase(),
                           style: TextStyle(
                             color: Color(0xfffbfbfb),
                             fontWeight: FontWeight.bold,

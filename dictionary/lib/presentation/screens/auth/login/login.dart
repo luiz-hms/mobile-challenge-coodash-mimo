@@ -138,10 +138,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
-                      TextButton(
-                        onPressed: null,
-                        child: Text("esqueci minha senha"),
-                      ),
                     ],
                   ),
                 ],

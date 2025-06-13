@@ -1,7 +1,7 @@
 import 'package:dictionary/core/injector.dart';
+import 'package:dictionary/data/data_source/database_helper.dart';
 import 'package:dictionary/data/models/word_models.dart';
 import 'package:dictionary/domain/word_repositories.dart';
-import 'package:dictionary/presentation/screens/word_detail/word_detail.dart';
 import 'package:dictionary/presentation/widgets/card/card.dart';
 import 'package:dictionary/presentation/widgets/favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +34,9 @@ class _FavoriteState extends State<Favorite> {
         future: repository.getPalavrasByFavorito(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(color: Color(0xfff56E0f)),
+            );
           } else if (snapshot.hasError) {
             return const Center(child: Text("Erro ao carregar Favoritos"));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -65,6 +67,20 @@ class _FavoriteState extends State<Favorite> {
             ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        elevation: 1,
+        backgroundColor: const Color(0xff151419),
+        tooltip: 'Increment',
+        onPressed: () {
+          repository.cleanList(DatabaseHelper.columnFavorite);
+          setState(() {});
+        },
+        child: const Icon(
+          Icons.delete_outline,
+          color: Color(0xfff56E0f),
+          size: 28,
+        ),
       ),
     );
   }

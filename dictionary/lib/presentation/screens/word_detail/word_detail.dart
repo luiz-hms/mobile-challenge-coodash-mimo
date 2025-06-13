@@ -26,7 +26,9 @@ class _WordDetailState extends State<WordDetail> {
         future: ApiService().fetchWordDetails(args.toString()),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(color: Color(0xfff56E0f)),
+            );
           }
           if (snapshot.hasError) {
             return Center(
@@ -40,6 +42,20 @@ class _WordDetailState extends State<WordDetail> {
           }
           final data = snapshot.data!;
           final wordDetails = data.first;
+          String? audioUrl;
+          for (var item in data) {
+            for (var phonetic in item.phonetics) {
+              // alguns campos "audio" vem vazio da api
+              // percorre as listas phonetics e verifica qual campo está preenchido
+              if (phonetic.audio != null &&
+                  phonetic.audio!.toString().isNotEmpty) {
+                audioUrl = phonetic.audio!;
+                break;
+              }
+            }
+            print(audioUrl.toString());
+            if (audioUrl != null) break;
+          }
           return Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -50,58 +66,58 @@ class _WordDetailState extends State<WordDetail> {
                   height: 300,
                   margin: const EdgeInsets.symmetric(vertical: 30),
                   child: Padding(
-                    padding: const EdgeInsets.all(18),
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
                     child: Column(
+                      spacing: 10,
                       children: [
                         Text(
                           wordDetails.word,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 25,
+                            fontSize: 35,
                           ),
                         ),
-                        const SizedBox(height: 15),
+
                         Text(
-                          '${wordDetails.phonetics.first.text}',
+                          'text: ${wordDetails.phonetics.first.text}',
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontWeight: FontWeight.w400,
-                            fontSize: 15,
+                            fontSize: 20,
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                CustomAudio(
-                  urlAudio:
-                      wordDetails.phonetics
-                          .firstWhere((p) => p.audio!.isNotEmpty)
-                          .toString(),
-                ),
+                CustomAudio(urlAudio: audioUrl.toString()),
                 const SizedBox(height: 50),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'meanings',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 35,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  child: Column(
+                    spacing: 5,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'meanings',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 35,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'verb - ${wordDetails.meanings.first.definitions.first.definition}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15,
+                      Text(
+                        'definition - ${wordDetails.meanings.first.definitions.first.definition}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
