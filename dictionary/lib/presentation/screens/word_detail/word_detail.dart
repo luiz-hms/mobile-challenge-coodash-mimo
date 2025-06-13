@@ -5,9 +5,6 @@ import 'package:lottie/lottie.dart';
 import '../../../services/api.dart';
 
 class WordDetail extends StatefulWidget {
-  //final String palavra;
-  //WordDetail({super.key});
-  //WordDetail(this.palavra, {super.key});
   const WordDetail({Key? key}) : super(key: key);
 
   @override
@@ -19,9 +16,19 @@ class _WordDetailState extends State<WordDetail> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as String;
-    print(args);
     return Scaffold(
-      appBar: AppBar(title: const Text('')),
+      appBar: AppBar(
+        title: Text(
+          args.toString(),
+          style: TextStyle(
+            color: Color(0xff151419),
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Color(0xfffbfbfb),
+        elevation: 1,
+      ),
       body: FutureBuilder<List<ApiDictionaryModels>>(
         future: ApiService().fetchWordDetails(args.toString()),
         builder: (context, snapshot) {
@@ -53,7 +60,6 @@ class _WordDetailState extends State<WordDetail> {
                 break;
               }
             }
-            print(audioUrl.toString());
             if (audioUrl != null) break;
           }
           return Padding(

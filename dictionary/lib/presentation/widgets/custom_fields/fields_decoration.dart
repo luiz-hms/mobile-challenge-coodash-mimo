@@ -10,8 +10,6 @@ InputDecoration FieldsDecoration(String hint, [Icon? prefix, Widget? sufix]) {
     suffixIconColor: Color(0xfff56E0f),
     hintText: hint,
     hintStyle: TextStyle(color: Color(0xff151419)),
-    //fillColor: Color(0xfffbfbfb),
-    //filled: true,
     contentPadding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
     focusedBorder: OutlineInputBorder(
       borderSide: BorderSide(

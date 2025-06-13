@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-BottomNavigationBarItem BottomBarItem({
+BottomNavigationBarItem bottomBarItem({
   required Icon icon,
   required String label,
 }) {

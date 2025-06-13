@@ -26,15 +26,15 @@ class _MainLayoutState extends State<MainLayout> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         items: <BottomNavigationBarItem>[
-          BottomBarItem(
+          bottomBarItem(
             icon: Icon(Icons.home, color: Color(0xfff56E0f)),
             label: "Home",
           ),
-          BottomBarItem(
+          bottomBarItem(
             icon: Icon(Icons.history, color: Color(0xfff56E0f)),
             label: "Histórico",
           ),
-          BottomBarItem(
+          bottomBarItem(
             icon: Icon(Icons.favorite, color: Colors.red),
             label: "Favoritos",
           ),

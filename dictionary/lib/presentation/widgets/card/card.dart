@@ -1,6 +1,5 @@
-import 'package:dictionary/core/injector.dart';
+import 'package:dictionary/core/dependence_injector/injector.dart';
 import 'package:dictionary/core/routes/named_routes.dart';
-import 'package:dictionary/data/models/word_models.dart';
 import 'package:dictionary/domain/word_repositories.dart';
 import 'package:flutter/material.dart';
 
@@ -31,7 +30,7 @@ class _CustomCardState extends State<CustomCard> {
         trailing: widget.trailing,
         onTap: () async {
           final wordDetailArgument = widget.word;
-          int id = await repository.addPalavra(widget.word);
+          int id = await repository.insertWord(widget.word);
           if (id != 0) {
             Navigator.of(
               context,

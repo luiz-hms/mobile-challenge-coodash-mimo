@@ -1,4 +1,4 @@
-import 'package:dictionary/core/injector.dart';
+import 'package:dictionary/core/dependence_injector/injector.dart';
 import 'package:dictionary/data/data_source/database_helper.dart';
 import 'package:dictionary/data/models/word_models.dart';
 import 'package:dictionary/domain/word_repositories.dart';
@@ -33,7 +33,7 @@ class _HistoryState extends State<History> {
         elevation: 1,
       ),
       body: FutureBuilder<List<WordModels>>(
-        future: repository.getPalavrasByHistorico(),
+        future: repository.getWordsByHistory(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -74,7 +74,6 @@ class _HistoryState extends State<History> {
       floatingActionButton: FloatingActionButton(
         elevation: 1,
         backgroundColor: const Color(0xff151419),
-        tooltip: 'Increment',
         onPressed: () {
           repository.cleanList(DatabaseHelper.columnHistory);
           setState(() {});

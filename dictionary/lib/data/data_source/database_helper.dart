@@ -9,17 +9,28 @@ class DatabaseHelper {
 
   static const String dbName = 'wordsDb.db';
   static const String tableName = 'tblWords';
-
+  // tabela de palavras
   static const String columnId = 'id';
   static const String columnWord = 'word';
   static const String columnFavorite = 'favorite';
   static const String columnHistory = 'history';
 
-  Future<Database> get database async {
-    if (_database != null) return _database!;
+  // tabela usuario
+  static const String userTable = 'users';
+  static const String userId = 'id';
+  static const String userName = 'name';
+  static const String userEmail = 'email';
+  static const String userPassword = 'password';
 
-    _database = await _initializeDatabase();
-    return _database!;
+  Future<Database> get database async {
+    try {
+      if (_database != null) return _database!;
+
+      _database = await _initializeDatabase();
+      return _database!;
+    } catch (e) {
+      throw Exception("Um erro ocorreu, tente novamente mais tarde");
+    }
   }
 
   Future<Database> _initializeDatabase() async {
@@ -37,15 +48,71 @@ class DatabaseHelper {
         $columnHistory INTEGER DEFAULT 1
       );
     ''');
+    await db.execute('''
+      CREATE TABLE $userTable (
+        $userId INTEGER PRIMARY KEY AUTOINCREMENT,
+        $userName TEXT NOT NULL,
+        $userEmail TEXT NOT NULL UNIQUE,
+        $userPassword TEXT NOT NULL
+      );
+    ''');
+  }
+
+  Future<int> insertUser(String name, String email, String password) async {
+    final db = await database;
+    final existingUser = await db.query(
+      userTable,
+      where: '$userEmail = ?',
+      whereArgs: [email],
+    );
+
+    if (existingUser.isNotEmpty) {
+      throw Exception('Email já cadastrado');
+    }
+
+    try {
+      return await db.insert(userTable, {
+        userName: name,
+        userEmail: email,
+        userPassword: password,
+      });
+    } catch (e) {
+      throw Exception('Erro ao cadastrar usuário');
+    }
+  }
+
+  Future<Map<String, dynamic>?> loginUser(String email, String password) async {
+    var result;
+    try {
+      final db = await database;
+      final userResult = await db.query(
+        userTable,
+        where: '$userEmail = ? AND $userPassword = ?',
+        whereArgs: [email, password],
+      );
+
+      if (userResult.isNotEmpty) {
+        result = userResult.first;
+      } else {
+        result = null;
+      }
+    } catch (e) {
+      result = null;
+    }
+    return result;
   }
 
   Future<int> insert(String word) async {
-    final db = await database;
-    return await db.insert(tableName, {
-      columnWord: word,
-      columnFavorite: 0,
-      columnHistory: 1,
-    });
+    try {
+      final db = await database;
+      return await db.insert(tableName, {
+        columnWord: word,
+        columnFavorite: 0,
+        columnHistory: 1,
+      });
+    } catch (e) {
+      throw Exception("erro ao salvar palavra");
+    }
   }
 
   Future<void> cleanList(String columnName) async {
@@ -58,30 +125,32 @@ class DatabaseHelper {
   }
 
   Future<int> update(String word, bool status) async {
-    final db = await database;
-    return await db.update(
-      tableName,
-      {'favorite': status ? 1 : 0},
-      where: '$columnWord = ?',
-      whereArgs: [word],
-    );
-  }
-
-  Future<List<Map<String, dynamic>>> queryAll() async {
-    final db = await database;
-    return await db.query(tableName);
+    try {
+      final db = await database;
+      return await db.update(
+        tableName,
+        {'favorite': status ? 1 : 0},
+        where: '$columnWord = ?',
+        whereArgs: [word],
+      );
+    } catch (e) {
+      throw Exception("Erro ao atualizar");
+    }
   }
 
   Future<List<Map<String, dynamic>>> queryByColumn(
     String column,
     int value,
   ) async {
-    final db = await database;
-    return await db.query(tableName, where: '$column = ?', whereArgs: [value]);
-  }
-
-  Future<int> delete(int id) async {
-    final db = await database;
-    return await db.delete(tableName, where: '$columnId = ?', whereArgs: [id]);
+    try {
+      final db = await database;
+      return await db.query(
+        tableName,
+        where: '$column = ?',
+        whereArgs: [value],
+      );
+    } catch (e) {
+      throw Exception("Erro ao buscar lista");
+    }
   }
 }

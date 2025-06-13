@@ -1,4 +1,4 @@
-import 'package:dictionary/core/injector.dart';
+import 'package:dictionary/core/dependence_injector/injector.dart';
 import 'package:dictionary/data/data_source/database_helper.dart';
 import 'package:dictionary/data/models/word_models.dart';
 import 'package:dictionary/domain/word_repositories.dart';
@@ -31,7 +31,7 @@ class _FavoriteState extends State<Favorite> {
         elevation: 1,
       ),
       body: FutureBuilder<List<WordModels>>(
-        future: repository.getPalavrasByFavorito(),
+        future: repository.getWordsByFavorite(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(

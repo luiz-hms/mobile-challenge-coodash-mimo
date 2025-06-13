@@ -35,10 +35,7 @@ class _CustomAudioState extends State<CustomAudio> {
   @override
   void initState() {
     super.initState();
-    player.setUrl(
-      widget.urlAudio,
-      //'https://api.dictionaryapi.dev/media/pronunciations/en/hello-uk.mp3'
-    );
+    player.setUrl(widget.urlAudio);
     player.positionStream.listen((p) {
       setState(() => position = p);
     });

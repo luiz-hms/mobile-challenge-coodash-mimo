@@ -13,10 +13,10 @@ class ApiService {
             .map((json) => ApiDictionaryModels.fromJson(json))
             .toList();
       } else {
-        throw Exception('Failed to load word details');
+        throw Exception('Erro ao buscar palavra');
       }
     } catch (e) {
-      throw Exception('Error fetching word details: $e');
+      throw Exception('Ocorreu um erro inesperado, tente novamente mais tarde');
     }
   }
 }
