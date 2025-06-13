@@ -3,7 +3,7 @@
 Aplicativo mobile desenvolvido em **Flutter** como parte de um **teste técnico da empresa [Coodash](https://www.coodash.com/)**.
 
 Este app permite buscar palavras em inglês e exibe seus significados, pronúncia com áudio, classe gramatical e outras informações linguísticas úteis. Também é possível favoritar palavras para acesso posterior, bem como visualizar o histórico de buscas recentes.
-
+O app encontra-se na pasta dictionary
 ---
 
 ## 🚀 Funcionalidades
